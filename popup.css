@@ -1,6 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap');
 body {
   width: 350px;
   height: 450px;
   font-family: Arial;
-  background: white;
+  background: #f5f6f7;
+  color: #2f2f33;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.title-small {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 3px;
+  margin: 0;
+  margin-bottom: 5px;
+  color: #2f2f33;
+  top: 10px;
+  left: 117px;
+  position: absolute;
+  letter-spacing: 9px;
+}
+
+.title-large {
+  font-size: 48px;
+  font-weight: 750;
+  font-family: 'Syne', sans-serif;
+  margin: 0;
+  color: #2f2f33;
+  line-height: 1.1;
+  letter-spacing: -3px;
+}
+
+#popup-container{
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 6rem;
+}
+
+.heading{
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+#timerSection{
+  padding-bottom: 6rem;
+}
+
+#timerDisplay{
+    text-align: center;  
+    font-size: 2.5rem;
+  font-weight: 800;
+  font-family: 'Syne', sans-serif;
+}
+
+#restartBtn{
+  background-color: #2f2f33;
+  color: #f5f6f7;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid #f5f6f7;
+  transition-duration: 0.4s;
+  font-size: medium;
+  border: 1px solid #2f2f33;
+
+}
+
+#restartBtn:hover{
+  color: #2f2f33;
+  background-color: #f5f6f7;
+  box-shadow:0 8px 16px 0 #2f2f333a;
+}
+
+#startBtn {
+  color: #2f2f33;
+  background-color: #f5f6f7;
+  border-radius: 20px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  font-size: medium;
+  border: 1px solid #2f2f33;
+
+}
+
+#startBtn:hover{
+  background-color: #2f2f33;
+  color: #ffffff;
+  box-shadow:0 8px 16px 0 #2f2f333a;
+}
+
+
+
+#blocklistSection{
+  padding-bottom: 6rem;
+
+}
+
+#blockedSitesList{
+    padding: 3rem;
 }
