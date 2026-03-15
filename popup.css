@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
+
 body {
   width: 350px;
   height: 450px;
@@ -27,7 +29,7 @@ body {
 
 .title-large {
   font-size: 48px;
-  font-weight: 750;
+  font-weight: 800;
   font-family: 'Syne', sans-serif;
   margin: 0;
   color: #2f2f33;
@@ -44,7 +46,6 @@ body {
 }
 
 .heading{
-  font-family: 'Syne', sans-serif;
   font-size: 2rem;
   font-weight: 800;
 }
@@ -54,16 +55,19 @@ body {
 }
 
 #timerDisplay{
-    text-align: center;  
-    font-size: 2.5rem;
-  font-weight: 800;
-  font-family: 'Syne', sans-serif;
+  text-align: center;  
+  font-size: 3rem;
+  font-family: "Rubik Mono One", monospace;
+  font-weight: 400;
+  border: 1px solid #2f2f33;
+  border-radius: 12px;
+  margin-bottom: 5px;
 }
 
 #restartBtn{
   background-color: #2f2f33;
   color: #f5f6f7;
-  border-radius: 20px;
+  border-radius: 6px;
   cursor: pointer;
   border: 1px solid #f5f6f7;
   transition-duration: 0.4s;
@@ -78,11 +82,12 @@ body {
   box-shadow:0 8px 16px 0 #2f2f333a;
 }
 
-#startBtn {
-  color: #2f2f33;
-  background-color: #f5f6f7;
-  border-radius: 20px;
+#startBtn{
+  background-color: #2f2f33;
+  color: #f5f6f7;
+  border-radius: 6px;
   cursor: pointer;
+  border: 1px solid #f5f6f7;
   transition-duration: 0.4s;
   font-size: medium;
   border: 1px solid #2f2f33;
@@ -90,8 +95,8 @@ body {
 }
 
 #startBtn:hover{
-  background-color: #2f2f33;
-  color: #ffffff;
+  color: #2f2f33;
+  background-color: #f5f6f7;
   box-shadow:0 8px 16px 0 #2f2f333a;
 }
 

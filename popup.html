@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=3.0">
-    <title>popup</title>
-    <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-    
-    <div id="popup-container">
-  <!-- <h1 class = "heading">PHocus</h1> -->
-   <div id="popup-container">
-  
-  <div class="title">
-    <h2 class="title-small">HOCUS POCUS</h2>
-    <h1 class="title-large">phocus</h1>
-  </div>
-  <div id="timerSection">
-    <div id="timerDisplay">25:00</div>
-    <button id="startBtn">Start Focus</button>
-    <button id="restartBtn">Restart Focus</button>
-  </div>
-  
-  <div id="blocklistSection">
-    <input id="siteInput" placeholder="Enter site (e.g., facebook.com)">
-    <button id="addSiteBtn">Add Site</button>
-  </div>  
-    <ul id="blockedSitesList">
-      <li>facebook.com <button class="deleteBtn">×</button></li>
-      <li>youtube.com <button class="deleteBtn">×</button></li>
-    </ul>
-  
-  
-</div>
 
-<script src = "popup.js"></script>         
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=3.0">
+  <title>popup</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+
+  <div id="popup-container">
+    <div id="popup-container">
+
+      <div class="title">
+        <h2 class="title-small">HOCUS POCUS</h2>
+        <h1 class="title-large">phocus</h1>
+      </div>
+      <div id="timerSection">
+        <div id="timerDisplay">25:00</div>
+        <button id="startBtn">Start Focus</button>
+        <button id="restartBtn">Restart Focus</button>
+      </div>
+
+      <div id="blocklistSection">
+        <input id="siteInput" placeholder="Enter site (e.g., facebook.com)">
+        <button id="addSiteBtn">Add Site</button>
+      </div>
+      <ul id="blockedSitesList">
+        <li>facebook.com <button class="deleteBtn">×</button></li>
+        <li>youtube.com <button class="deleteBtn">×</button></li>
+      </ul>
+
+
+    </div>
+
+    <script src="popup.js"></script>
 </body>
+
 </html>
