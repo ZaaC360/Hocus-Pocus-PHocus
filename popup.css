@@ -74,7 +74,6 @@ body {
   transition-duration: 0.4s;
   font-size: medium;
   border: 1px solid #2f2f33;
-
 }
 
 #restartBtn:hover{
@@ -103,12 +102,11 @@ body {
 
 
 #blocklistSection{
-  padding-bottom: 6rem;
-
-}
-
-#blockedSitesList{
-    padding: 3rem;
+  padding-bottom: 0.5rem;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  /* width: 70vw; */
 }
 
 #siteInput{
@@ -127,7 +125,7 @@ body {
   border-radius: 8px;
   font-size: medium;
   padding: 5px;
-width: 30px;
+  width: 30px;
   border: 1px solid #2f2f33;
   cursor: pointer;
 }
@@ -136,4 +134,22 @@ width: 30px;
   color: #2f2f33;
   background-color: #f5f6f7;
   box-shadow:0 8px 16px 0 #2f2f333a;
+}
+
+#blockedSitesList{
+  list-style: none;
+  display:inline-flex;
+  padding-left: 0;
+}
+
+/* .deleteBtn{
+  border: 1px solid #2f2f33;
+  border-radius: 50%;
+} */
+
+li{
+  border: 1px solid #2f2f33;
+  border-radius: 50%;
+  padding: 20px;
+
 }
