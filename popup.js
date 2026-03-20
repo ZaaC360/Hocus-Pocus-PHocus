@@ -1,22 +1,20 @@
 let startBtn = document.querySelector("#startBtn");
 let restartBtn = document.querySelector("#restartBtn");
+let timerDisplay = document.querySelector("#timerDisplay");
 let siteInput = document.querySelector("#siteInput");
 let addSiteBtn = document.querySelector("#addSiteBtn");
 let blockedSitesList = document.querySelector("#blockedSitesList");
-let timerDisplay = document.querySelector("#timerDisplay");
-
 let timerRunning = false;
 
-
 startBtn.addEventListener("click", () => {
-    timerRunning = !timerRunning; 
+    timerRunning = !timerRunning;
     
     if (timerRunning) {
         startBtn.textContent = "Stop Focus";
-        timerInterval = setInterval(updateTimer, 1000);
+        chrome.runtime.sendMessage({action: "startTimer"});
     } else {
         startBtn.textContent = "Start Focus";
-        clearInterval(timerInterval);
+        chrome.runtime.sendMessage({action: "stopTimer"});
     }
 });
 
@@ -24,27 +22,33 @@ addSiteBtn.addEventListener("click", () => {
     let siteName = siteInput.value;
     
     if (siteName.trim() === "") {
+        alert("Please enter a site");
         return;
     }
+    chrome.runtime.sendMessage({
+        action: "addSite",
+        site: siteName
+    });
     
-    let newItem = document.createElement("li");
-    newItem.innerHTML = `${siteName} <button class="deleteBtn">×</button>`;
-    blockedSitesList.appendChild(newItem);
-    siteInput.value = "";
-    addDeleteListener();
+    siteInput.value = "";  // Clear input
 });
+
 
 function addDeleteListener() {
     let deleteButtons = document.querySelectorAll(".deleteBtn");
     deleteButtons.forEach(btn => {
         btn.addEventListener("click", (e) => {
-            e.target.parentElement.remove(); 
+            let listItem = e.target.parentElement;
+            let siteName = listItem.textContent.replace(" ×", "");  // Get site name
+            
+            // SEND MESSAGE to background.js
+            chrome.runtime.sendMessage({
+                action: "deleteSite",
+                site: siteName
+            });
         });
     });
 }
-
-let timeLeft = 1500;
-let timerInterval = null;
 
 function formatTime(seconds) {
     let minutes = Math.floor(seconds / 60);
@@ -53,23 +57,48 @@ function formatTime(seconds) {
     return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }
 
-function updateTimer() {
-    timeLeft--;
-
-    timerDisplay.textContent = formatTime(timeLeft);
-
-    if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        timerRunning = false;
-        startBtn.textContent = "Start Focus";
-    }
-}
 
 restartBtn.addEventListener("click", () => {
-    clearInterval(timerInterval);
-
-    timeLeft = 1500;
-    timerDisplay.textContent = formatTime(timeLeft);
+    chrome.runtime.sendMessage({action: "restartTimer"});
+    timerDisplay.textContent = formatTime(1500);
     timerRunning = false;
     startBtn.textContent = "Start Focus";
+});
+
+chrome.runtime.onMessage.addListener((message, sender, response) => {
+    
+    if (message.action === "updateDisplay") {
+        timerDisplay.textContent = formatTime(message.timeLeft);
+    }
+
+     if (message.action === "siteAdded") {
+        let newItem = document.createElement("li");
+        newItem.innerHTML = `${message.site} <button class="deleteBtn">×</button>`;
+        blockedSitesList.appendChild(newItem);
+        addDeleteListener();
+    }
+    
+
+    if (message.action === "siteDeleted") {
+        let listItems = document.querySelectorAll("#blockedSitesList li");
+        listItems.forEach(item => {
+            if (item.textContent.includes(message.site)) {
+                item.remove();
+            }
+        });
+    }
+    
+});
+    
+
+
+chrome.storage.local.get(['blockedSites'], (result) => {
+    let sites = result.blockedSites || [];
+    blockedSitesList.innerHTML = '';
+    sites.forEach(site => {
+        let newItem = document.createElement("li");
+        newItem.innerHTML = `${site} <button class="deleteBtn">×</button>`;
+        blockedSitesList.appendChild(newItem);
+    });
+    addDeleteListener();
 });
