@@ -65,20 +65,53 @@ restartBtn.addEventListener("click", () => {
     startBtn.textContent = "Start Focus";
 });
 
+// chrome.runtime.onMessage.addListener((message, sender, response) => {
+    
+//     if (message.action === "updateDisplay") {
+//         timerDisplay.textContent = formatTime(message.timeLeft);
+//     }
+
+//      if (message.action === "siteAdded") {
+//         let newItem = document.createElement("li");
+//         newItem.innerHTML = `${message.site} <button class="deleteBtn">×</button>`;
+//         blockedSitesList.appendChild(newItem);
+//         addDeleteListener();
+//     }
+    
+
+//     if (message.action === "siteDeleted") {
+//         let listItems = document.querySelectorAll("#blockedSitesList li");
+//         listItems.forEach(item => {
+//             if (item.textContent.includes(message.site)) {
+//                 item.remove();
+//             }
+//         });
+//     }
+    
+// });
+    
+
+
+chrome.runtime.sendMessage({action: "getTimerStatus"});
+
 chrome.runtime.onMessage.addListener((message, sender, response) => {
     
     if (message.action === "updateDisplay") {
         timerDisplay.textContent = formatTime(message.timeLeft);
     }
+    
+    if (message.action === "timerStatus" && message.timerRunning) {
+        startBtn.textContent = "Stop Focus";
+        timerRunning = true;
+    }
 
-     if (message.action === "siteAdded") {
+    if (message.action === "siteAdded") {
         let newItem = document.createElement("li");
         newItem.innerHTML = `${message.site} <button class="deleteBtn">×</button>`;
         blockedSitesList.appendChild(newItem);
         addDeleteListener();
     }
     
-
     if (message.action === "siteDeleted") {
         let listItems = document.querySelectorAll("#blockedSitesList li");
         listItems.forEach(item => {
@@ -87,11 +120,9 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
             }
         });
     }
-    
 });
-    
 
-
+// Load blocked sites
 chrome.storage.local.get(['blockedSites'], (result) => {
     let sites = result.blockedSites || [];
     blockedSitesList.innerHTML = '';

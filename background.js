@@ -41,6 +41,20 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
         timerRunning = false;
     }
 
+if (message.action === "getTimerStatus") {
+    chrome.runtime.sendMessage({
+        action: "updateDisplay",
+        timeLeft: timeLeft
+    });
+    
+    if (timerRunning) {
+        chrome.runtime.sendMessage({
+            action: "timerStatus",
+            timerRunning: timerRunning
+        });
+    }
+}
+
     // addSite
 
     if (message.action === "addSite") {
