@@ -1,89 +1,111 @@
-let timerRunning = false;
-let timeLeft = 1500;
-let timerInterval = null;
+const FOCUS_TIME = 1500;
 
-function broadcastTimer() {
+let isRunning = false;
+let timeLeft = FOCUS_TIME;
+let timerId = null;
+
+function sendTimerUpdate() {
   chrome.runtime.sendMessage({
     action: "updateDisplay",
-    timeLeft,
-    timerRunning
+    timeLeft: timeLeft,
+    timerRunning: isRunning
   });
 }
 
-function stopActiveTimer() {
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
+function stopTimer() {
+  if (timerId) {
+    clearInterval(timerId);
+    timerId = null;
   }
 }
 
-function updateTimer() {
-  timeLeft -= 1;
-  broadcastTimer();
+function startTimer() {
+  stopTimer();
+  isRunning = true;
 
-  if (timeLeft <= 0) {
-    stopActiveTimer();
-    timerRunning = false;
-    timeLeft = 1500;
-    broadcastTimer();
-  }
+  timerId = setInterval(function () {
+    timeLeft -= 1;
+
+    if (timeLeft <= 0) {
+      stopTimer();
+      isRunning = false;
+      timeLeft = FOCUS_TIME;
+    }
+
+    sendTimerUpdate();
+  }, 1000);
+
+  sendTimerUpdate();
 }
 
-chrome.runtime.onMessage.addListener((message) => {
+function pauseTimer() {
+  isRunning = false;
+  stopTimer();
+  sendTimerUpdate();
+}
+
+function restartTimer() {
+  isRunning = false;
+  stopTimer();
+  timeLeft = FOCUS_TIME;
+  sendTimerUpdate();
+}
+
+function addSite(site) {
+  chrome.storage.local.get(["blockedSites"], function (result) {
+    const blockedSites = result.blockedSites || [];
+
+    if (blockedSites.includes(site)) {
+      return;
+    }
+
+    blockedSites.push(site);
+    chrome.storage.local.set({ blockedSites: blockedSites });
+
+    chrome.runtime.sendMessage({
+      action: "siteAdded",
+      site: site
+    });
+  });
+}
+
+function deleteSite(siteToDelete) {
+  chrome.storage.local.get(["blockedSites"], function (result) {
+    const blockedSites = (result.blockedSites || []).filter(function (site) {
+      return site !== siteToDelete;
+    });
+
+    chrome.storage.local.set({ blockedSites: blockedSites });
+
+    chrome.runtime.sendMessage({
+      action: "siteDeleted",
+      site: siteToDelete
+    });
+  });
+}
+
+chrome.runtime.onMessage.addListener(function (message) {
   if (message.action === "startTimer") {
-    stopActiveTimer();
-    timerRunning = true;
-    timerInterval = setInterval(updateTimer, 1000);
-    broadcastTimer();
+    startTimer();
   }
 
   if (message.action === "stopTimer") {
-    timerRunning = false;
-    stopActiveTimer();
-    broadcastTimer();
+    pauseTimer();
   }
 
   if (message.action === "restartTimer") {
-    timerRunning = false;
-    stopActiveTimer();
-    timeLeft = 1500;
-    broadcastTimer();
+    restartTimer();
   }
 
   if (message.action === "getTimerStatus") {
-    broadcastTimer();
+    sendTimerUpdate();
   }
 
   if (message.action === "addSite") {
-    const newSite = message.site;
-
-    chrome.storage.local.get(["blockedSites"], (result) => {
-      const sites = result.blockedSites || [];
-
-      if (!sites.includes(newSite)) {
-        sites.push(newSite);
-        chrome.storage.local.set({ blockedSites: sites });
-
-        chrome.runtime.sendMessage({
-          action: "siteAdded",
-          site: newSite
-        });
-      }
-    });
+    addSite(message.site);
   }
 
   if (message.action === "deleteSite") {
-    const siteToDelete = message.site;
-
-    chrome.storage.local.get(["blockedSites"], (result) => {
-      let sites = result.blockedSites || [];
-      sites = sites.filter((site) => site !== siteToDelete);
-
-      chrome.storage.local.set({ blockedSites: sites });
-      chrome.runtime.sendMessage({
-        action: "siteDeleted",
-        site: siteToDelete
-      });
-    });
+    deleteSite(message.site);
   }
 });
