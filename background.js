@@ -1,98 +1,89 @@
 let timerRunning = false;
-let timeLeft = 1500;  // 25 minutes
+let timeLeft = 1500;
 let timerInterval = null;
 
-function formatTime(seconds) {
-    let minutes = Math.floor(seconds / 60);
-    let secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+function broadcastTimer() {
+  chrome.runtime.sendMessage({
+    action: "updateDisplay",
+    timeLeft,
+    timerRunning
+  });
+}
+
+function stopActiveTimer() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
 }
 
 function updateTimer() {
-    timeLeft--;
+  timeLeft -= 1;
+  broadcastTimer();
 
-    chrome.runtime.sendMessage({
-        action: "updateDisplay",
-        timeLeft: timeLeft
-    });
-    
-    if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        timerRunning = false;
-        timeLeft = 1500;
-    }
+  if (timeLeft <= 0) {
+    stopActiveTimer();
+    timerRunning = false;
+    timeLeft = 1500;
+    broadcastTimer();
+  }
 }
 
-chrome.runtime.onMessage.addListener((message, sender, response) => {
-    
-    if (message.action === "startTimer") {
-        timerRunning = true;
-        timerInterval = setInterval(updateTimer, 1000);
-    }
-    
-    if (message.action === "stopTimer") {
-        timerRunning = false;
-        clearInterval(timerInterval);
-    }
-    
-    if (message.action === "restartTimer") {
-        clearInterval(timerInterval);
-        timeLeft = 1500;
-        timerRunning = false;
-    }
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "startTimer") {
+    stopActiveTimer();
+    timerRunning = true;
+    timerInterval = setInterval(updateTimer, 1000);
+    broadcastTimer();
+  }
 
-if (message.action === "getTimerStatus") {
-    chrome.runtime.sendMessage({
-        action: "updateDisplay",
-        timeLeft: timeLeft
-    });
-    
-    if (timerRunning) {
-        chrome.runtime.sendMessage({
-            action: "timerStatus",
-            timerRunning: timerRunning
-        });
-    }
-}
+  if (message.action === "stopTimer") {
+    timerRunning = false;
+    stopActiveTimer();
+    broadcastTimer();
+  }
 
-    // addSite
+  if (message.action === "restartTimer") {
+    timerRunning = false;
+    stopActiveTimer();
+    timeLeft = 1500;
+    broadcastTimer();
+  }
 
-    if (message.action === "addSite") {
-    let newSite = message.site;
+  if (message.action === "getTimerStatus") {
+    broadcastTimer();
+  }
 
-    chrome.storage.local.get(['blockedSites'], (result) => {
-        let sites = result.blockedSites || [];  
-      
-        if (!sites.includes(newSite)) {
-            sites.push(newSite);  
+  if (message.action === "addSite") {
+    const newSite = message.site;
 
-            chrome.storage.local.set({ blockedSites: sites });
+    chrome.storage.local.get(["blockedSites"], (result) => {
+      const sites = result.blockedSites || [];
 
-            chrome.runtime.sendMessage({
-                action: "siteAdded",
-                site: newSite
-            });
-        }
-    });
-}
-
-
-// Delete Site
-
-if (message.action === "deleteSite") {
-    let siteToDelete = message.site;
-    
-    chrome.storage.local.get(['blockedSites'], (result) => {
-        let sites = result.blockedSites || [];
-        sites = sites.filter(site => site !== siteToDelete);
-
+      if (!sites.includes(newSite)) {
+        sites.push(newSite);
         chrome.storage.local.set({ blockedSites: sites });
-        chrome.runtime.sendMessage({
-            action: "siteDeleted",
-            site: siteToDelete
-        });
-    });
-}
 
-    
+        chrome.runtime.sendMessage({
+          action: "siteAdded",
+          site: newSite
+        });
+      }
+    });
+  }
+
+  if (message.action === "deleteSite") {
+    const siteToDelete = message.site;
+
+    chrome.storage.local.get(["blockedSites"], (result) => {
+      let sites = result.blockedSites || [];
+      sites = sites.filter((site) => site !== siteToDelete);
+
+      chrome.storage.local.set({ blockedSites: sites });
+      chrome.runtime.sendMessage({
+        action: "siteDeleted",
+        site: siteToDelete
+      });
+    });
+  }
 });

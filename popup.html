@@ -1,39 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=3.0">
-  <title>popup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>phocus</title>
   <link rel="stylesheet" href="popup.css">
 </head>
-
 <body>
-    <div id="popup-container">
-
-      <div class="title">
-        <h2 class="title-small">HOCUS POCUS</h2>
-        <h1 class="title-large">phocus</h1>
-      </div>
-      <div id="timerSection">
-        <div id="timerDisplay">25:00</div>
-        <button id="startBtn">Start Focus</button>
-        <button id="restartBtn">Restart Focus</button>
-      </div>
-
-      <div id="blocklistSection">
-        <div class="siteInput">
-        <input id="siteInput" placeholder="Enter site url">
-        <button id="addSiteBtn">+</button>
+  <main class="popup-shell">
+    <header class="hero">
+      <div class="hero-row">
+        <div class="hero-brand">
+          <img src="phocus.svg" alt="phocus" class="hero-logo">
+          <p class="hero-copy">Stay locked in gang...</p>
         </div>
-      <ul id="blockedSitesList">
-
-        <li>site <button class="deleteBtn">×</button> </li>
-        <li>site <button class="deleteBtn">×</button> </li>
-      </ul>
+        <div class="hero-mark" aria-hidden="true"></div>
       </div>
-    </div>
-    <script src="popup.js"></script>
-</body>
+    </header>
 
+    <section class="timer-panel" aria-labelledby="timer-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="timer-heading">Current session</h2>
+        </div>
+        <span id="timerStatus" class="status-badge status-idle">Not started</span>
+      </div>
+
+      <div class="timer-display-wrap">
+        <div id="timerDisplay" class="timer-display" aria-live="polite">25:00</div>
+        <!-- <p class="timer-caption">Pomodoro block set to 25 minutes</p> -->
+      </div>
+
+      <div class="button-row">
+        <button id="startBtn" class="btn btn-primary">Start Focus</button>
+        <button id="restartBtn" class="btn btn-secondary">Restart Focus</button>
+      </div>
+    </section>
+
+    <section class="sites-panel" aria-labelledby="blocked-sites-heading">
+      <div class="section-heading section-heading-stack">
+        <div>
+          <!-- <p class="section-label">Site Control</p> -->
+          <h2 id="blocked-sites-heading">Blocked Sites</h2>
+        </div>
+        <!-- <p class="section-copy">Add domains you want phocus to keep out of the way during focus time.</p> -->
+      </div>
+
+      <div class="site-input-row">
+        <input id="siteInput" type="text" inputmode="url" placeholder="Enter site (e.g., facebook.com)" aria-label="Site to block">
+        <button id="addSiteBtn" class="icon-btn" aria-label="Add blocked site">
+          <span aria-hidden="true">+</span>
+        </button>
+      </div>
+
+      <p id="emptyState" class="empty-state">No sites blocked yet. Add one to build your phocus list.</p>
+      <ul id="blockedSitesList" class="site-list" aria-live="polite"></ul>
+    </section>
+
+    <!-- <section class="stats-panel" aria-labelledby="stats-heading">
+      <div class="section-heading section-heading-stack">
+        <div>
+          <p class="section-label">Coming Soon</p>
+          <h2 id="stats-heading">Focus Stats</h2>
+        </div>
+        <p class="section-copy">This space is reserved for your upcoming weekly streaks, sessions completed, and time saved.</p>
+      </div>
+
+      <div class="stats-placeholder" aria-hidden="true">
+        <div class="stats-bar stats-bar-lg"></div>
+        <div class="stats-grid">
+          <div class="stats-bar"></div>
+          <div class="stats-bar stats-bar-soft"></div>
+          <div class="stats-bar stats-bar-soft"></div>
+        </div>
+      </div>
+    </section> -->
+  </main>
+
+  <script src="popup.js"></script>
+</body>
 </html>
