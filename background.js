@@ -109,3 +109,54 @@ chrome.runtime.onMessage.addListener(function (message) {
     deleteSite(message.site);
   }
 });
+
+
+// Extract domain from URL
+function extractDomain(url) {
+  try {
+    let domain = new URL(url).hostname;
+    if (domain.startsWith("www.")) {
+      domain = domain.slice(4);
+    }
+    return domain;
+  } catch (e) {
+    return null;
+  }
+}
+
+// Check if tab should be blocked
+function checkAndBlockTab(tabId, url) {
+  // Skip internal Chrome pages
+  if (!url || url.startsWith("chrome://") || url.startsWith("about:")) {
+    return;
+  }
+  
+  let domain = extractDomain(url);
+  if (!domain) return;
+  
+  // Check if domain is blocked
+  chrome.storage.local.get(['blockedSites'], (result) => {
+    let blockedSites = result.blockedSites || [];
+    
+    if (blockedSites.includes(domain)) {
+      chrome.tabs.sendMessage(tabId, { action: "blockPage" });
+    }
+  });
+}
+
+// Block when user switches to a tab
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  if (!isRunning) return;
+  
+  chrome.tabs.get(activeInfo.tabId, (tab) => {
+    checkAndBlockTab(activeInfo.tabId, tab.url);
+  });
+});
+
+// Block when user opens/loads a page
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (!isRunning) return;
+  if (changeInfo.status !== "complete") return;
+  
+  checkAndBlockTab(tabId, tab.url);
+});
