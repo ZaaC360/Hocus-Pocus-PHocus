@@ -55,19 +55,26 @@ function deleteSite(site) {
 function createSiteItem(site) {
   const listItem = document.createElement("li");
   listItem.className = "site-pill";
+  listItem.dataset.site = site;
 
-  const siteName = document.createElement("span");
-  siteName.textContent = site;
+  const favicon = document.createElement("img");
+  favicon.src = `https://icons.duckduckgo.com/ip3/${site}.ico`;
+  favicon.alt = site;
+  favicon.title = site;
+  favicon.style.width = "24px";
+  favicon.style.height = "24px";
+  favicon.style.borderRadius = "4px";
+  favicon.style.objectFit = "contain";
 
   const deleteBtn = document.createElement("button");
   deleteBtn.type = "button";
-  deleteBtn.textContent = "x";
+  deleteBtn.textContent = "×";
   deleteBtn.setAttribute("aria-label", `Remove ${site}`);
   deleteBtn.addEventListener("click", function () {
     deleteSite(site);
   });
 
-  listItem.appendChild(siteName);
+  listItem.appendChild(favicon);
   listItem.appendChild(deleteBtn);
 
   return listItem;
@@ -84,12 +91,10 @@ function renderSites(sites) {
 }
 
 function addSiteToList(site) {
-  const sitesInList = blockedSitesList.querySelectorAll("span");
+  const existingItem = blockedSitesList.querySelector(`[data-site="${site}"]`);
 
-  for (const item of sitesInList) {
-    if (item.textContent === site) {
-      return;
-    }
+  if (existingItem) {
+    return;
   }
 
   blockedSitesList.appendChild(createSiteItem(site));
@@ -97,15 +102,11 @@ function addSiteToList(site) {
 }
 
 function removeSiteFromList(site) {
-  const items = blockedSitesList.querySelectorAll("li");
+  const item = blockedSitesList.querySelector(`[data-site="${site}"]`);
 
-  items.forEach(function (item) {
-    const siteName = item.querySelector("span");
-
-    if (siteName && siteName.textContent === site) {
-      item.remove();
-    }
-  });
+  if (item) {
+    item.remove();
+  }
 
   updateEmptyState();
 }

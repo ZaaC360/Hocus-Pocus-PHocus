@@ -28,53 +28,55 @@
 
       <div class="timer-display-wrap">
         <div id="timerDisplay" class="timer-display" aria-live="polite">25:00</div>
-        <!-- <p class="timer-caption">Pomodoro block set to 25 minutes</p> -->
       </div>
 
       <div class="button-row">
         <button id="startBtn" class="btn btn-primary">Start Phocus</button>
-        <button id="restartBtn" class="btn btn-secondary">Restart Phocus</button>
+        <button id="restartBtn" class="btn btn-secondary">Reset Phocus</button>
       </div>
     </section>
 
     <section class="sites-panel" aria-labelledby="blocked-sites-heading">
       <div class="section-heading section-heading-stack">
         <div>
-          <!-- <p class="section-label">Site Control</p> -->
           <h2 id="blocked-sites-heading">Blocked Sites</h2>
         </div>
-        <!-- <p class="section-copy">Add domains you want phocus to keep out of the way during focus time.</p> -->
       </div>
 
-      <div class="site-input-row">
-        <input id="siteInput" type="text" inputmode="url" placeholder="Enter site (e.g., facebook.com)" aria-label="Site to block">
-        <button id="addSiteBtn" class="icon-btn" aria-label="Add blocked site">
-          <span aria-hidden="true">+</span>
-        </button>
-      </div>
+    <div class="site-input-row">
+  <input 
+    id="siteInput" 
+    type="text" 
+    inputmode="url" 
+    placeholder="Enter site (e.g., facebook.com)" 
+    aria-label="Site to block"
+  >
+  
+  
+  <img 
+    id="siteFavicon" 
+    alt="" 
+    aria-hidden="true"
+    style="
+      width: 32px; 
+      height: 32px; 
+      display: none; 
+      border-radius: 4px;
+      object-fit: contain;
+    "
+  >
+  
+  <button 
+    id="addSiteBtn" 
+    class="icon-btn" 
+    aria-label="Add blocked site"
+  >
+    <span aria-hidden="true">+</span>
+  </button>
+</div>
 
-      <p id="emptyState" class="empty-state">No sites blocked yet. Add one to build your phocus list.</p>
-      <ul id="blockedSitesList" class="site-list" aria-live="polite"></ul>
-    </section>
-
-    <!-- <section class="stats-panel" aria-labelledby="stats-heading">
-      <div class="section-heading section-heading-stack">
-        <div>
-          <p class="section-label">Coming Soon</p>
-          <h2 id="stats-heading">Focus Stats</h2>
-        </div>
-        <p class="section-copy">This space is reserved for your upcoming weekly streaks, sessions completed, and time saved.</p>
-      </div>
-
-      <div class="stats-placeholder" aria-hidden="true">
-        <div class="stats-bar stats-bar-lg"></div>
-        <div class="stats-grid">
-          <div class="stats-bar"></div>
-          <div class="stats-bar stats-bar-soft"></div>
-          <div class="stats-bar stats-bar-soft"></div>
-        </div>
-      </div>
-    </section> -->
+<p id="emptyState" class="empty-state">No sites blocked yet. Add one to build your phocus list.</p>
+<ul id="blockedSitesList" class="site-list" aria-live="polite"></ul>
   </main>
 
   <script src="popup.js"></script>
