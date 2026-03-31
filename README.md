@@ -13,7 +13,7 @@ A Chrome extension that blocks distracting websites during focus sessions using 
 
 ## Installation
 
-### Option 1: Load Unpacked (the only option for now)
+### Option 1: Load Unpacked (the only option as of now)
 1. Clone this repo: `git clone https://github.com/yourusername/phocus.git`
 2. Go to `chrome://extensions/`
 3. Enable "Developer mode" (top right)
