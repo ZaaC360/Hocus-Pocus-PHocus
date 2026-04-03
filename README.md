@@ -63,4 +63,4 @@ phocus/
 
 ---
 
-**Made for staying focused. 🚀**
+**Made for staying phocused. 🚀**
