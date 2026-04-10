@@ -150,10 +150,16 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
   });
 });
 
-// Block when user opens/loads a page
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!isRunning) return;
-  if (changeInfo.status !== "loading") return;
   
-  checkAndBlockTab(tabId, tab.url);
+  if (changeInfo.status === "loading" && tab.url) {
+    checkAndBlockTab(tabId, tab.url);
+    return;
+  }
+  
+  if (changeInfo.status === "complete" && tab.url) {
+    checkAndBlockTab(tabId, tab.url);
+  }
 });
