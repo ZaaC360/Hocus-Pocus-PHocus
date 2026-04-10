@@ -111,7 +111,6 @@ chrome.runtime.onMessage.addListener(function (message) {
 });
 
 
-// Extract domain from URL
 function extractDomain(url) {
   try {
     let domain = new URL(url).hostname;
@@ -124,9 +123,7 @@ function extractDomain(url) {
   }
 }
 
-// Check if tab should be blocked
 function checkAndBlockTab(tabId, url) {
-  // Skip internal Chrome pages
   if (!url || url.startsWith("chrome://") || url.startsWith("about:")) {
     return;
   }
@@ -156,7 +153,7 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 // Block when user opens/loads a page
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!isRunning) return;
-  if (changeInfo.status !== "complete") return;
+  if (changeInfo.status !== "loading") return;
   
   checkAndBlockTab(tabId, tab.url);
 });
